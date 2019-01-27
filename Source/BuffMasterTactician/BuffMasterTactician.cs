@@ -19,7 +19,7 @@ namespace BuffMasterTactician
             LogPath = Path.Combine(ModDirectory, "BuffMasterTactician.log");
             File.CreateText(BuffMasterTactician.LogPath);
 
-            var harmony = HarmonyInstance.Create("de.ben.BuffMasterTactician");
+            var harmony = HarmonyInstance.Create("de.mad.BuffMasterTactician");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
     }
