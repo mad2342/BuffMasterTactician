@@ -3,8 +3,6 @@ using Harmony;
 using BattleTech;
 using System.IO;
 
-
-
 namespace BuffMasterTactician
 {
     public class BuffMasterTactician
@@ -41,6 +39,7 @@ namespace BuffMasterTactician
                             Logger?.WriteLine("[BuffMasterTactician] Pilot is Master Tactician: ModifyMorale(3)");
 
                             __instance.team.ModifyMorale(3);
+                            __instance.Combat.MessageCenter.PublishMessage(new FloatieMessage(__instance.GUID, __instance.GUID, "MASTER TACTICIAN: + 3 RESOLVE", FloatieMessage.MessageNature.Buff));
                         }
                     }
                 }
