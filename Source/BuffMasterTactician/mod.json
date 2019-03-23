@@ -3,7 +3,7 @@
     "Enabled": true,
 
     "Version": "1.5.0-001R",
-    "Description": "Master Tactician will now raise your teams resolve by 3 at the start of every round.",
+    "Description": "Master Tactician will now raise your teams resolve by 5 at the start of every round.",
     "Author": "Mad",
 	
 	"DLL": "BuffMasterTactician.dll"

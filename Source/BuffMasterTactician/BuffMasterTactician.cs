@@ -38,8 +38,13 @@ namespace BuffMasterTactician
                         {
                             Logger?.WriteLine("[BuffMasterTactician] Pilot is Master Tactician: ModifyMorale(3)");
 
-                            __instance.team.ModifyMorale(3);
-                            __instance.Combat.MessageCenter.PublishMessage(new FloatieMessage(__instance.GUID, __instance.GUID, "MASTER TACTICIAN: + 3 RESOLVE", FloatieMessage.MessageNature.Buff));
+                            __instance.team.ModifyMorale(5);
+
+                            // Floatie just for player
+                            if (__instance.team.IsLocalPlayer)
+                            {
+                                __instance.Combat.MessageCenter.PublishMessage(new FloatieMessage(__instance.GUID, __instance.GUID, "MASTER TACTICIAN: + 5 RESOLVE", FloatieMessage.MessageNature.Buff));
+                            }
                         }
                     }
                 }
