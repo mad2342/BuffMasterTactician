@@ -36,7 +36,7 @@ namespace BuffMasterTactician
                     {
                         if (currentPilot.PassiveAbilities[i].Def.Description.Id == "AbilityDefT8A")
                         {
-                            Logger?.WriteLine("[BuffMasterTactician] Pilot is Master Tactician: ModifyMorale(3)");
+                            Logger?.WriteLine("[BuffMasterTactician] Pilot is Master Tactician: ModifyMorale(5)");
 
                             __instance.team.ModifyMorale(5);
 
