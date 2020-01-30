@@ -7,44 +7,47 @@ namespace BuffMasterTactician
 {
     public class BuffMasterTactician
     {
-        public static string LogPath;
-        public static string ModDirectory;
+        internal static string LogPath;
+        internal static string ModDirectory;
 
-        public static void Init(string directory, string settingsJSON)
+        // BEN: DebugLevel (0: nothing, 1: error, 2: debug, 3: info)
+        internal static int DebugLevel = 3;
+
+        public static void Init(string directory, string settings)
         {
             ModDirectory = directory;
-
             LogPath = Path.Combine(ModDirectory, "BuffMasterTactician.log");
-            File.CreateText(BuffMasterTactician.LogPath);
 
-            var harmony = HarmonyInstance.Create("de.mad.BuffMasterTactician");
+            Logger.Initialize(LogPath, DebugLevel, ModDirectory, nameof(BuffMasterTactician));
+
+            HarmonyInstance harmony = HarmonyInstance.Create("de.mad.BuffMasterTactician");
             harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
     }
 
+
+
     [HarmonyPatch(typeof(AbstractActor), "OnNewRound", null)]
-    public static class Tactics_Morale_Bonus
+    public static class AbstractActor_OnNewRound_Patch
     {
         public static void Postfix(AbstractActor __instance)
         {
-            using (var Logger = File.AppendText(BuffMasterTactician.LogPath))
+            Pilot p = __instance.GetPilot();
+
+            if (p != null && p.PassiveAbilities.Count > 0)
             {
-                Pilot currentPilot = __instance.GetPilot();
-                if (currentPilot != null && currentPilot.PassiveAbilities.Count > 0)
+                for (int i = 0; i < p.PassiveAbilities.Count; i++)
                 {
-                    for (int i = 0; i < currentPilot.PassiveAbilities.Count; i++)
+                    if (p.PassiveAbilities[i].Def.Description.Id == "AbilityDefT8A")
                     {
-                        if (currentPilot.PassiveAbilities[i].Def.Description.Id == "AbilityDefT8A")
+                        Logger.Info($"[AbstractActor_OnNewRound_POSTFIX] {p.Callsign} is Master Tactician: ModifyMorale(5)");
+
+                        __instance.team.ModifyMorale(5);
+
+                        // Floatie just for player
+                        if (__instance.team.IsLocalPlayer)
                         {
-                            Logger?.WriteLine("[BuffMasterTactician] Pilot is Master Tactician: ModifyMorale(5)");
-
-                            __instance.team.ModifyMorale(5);
-
-                            // Floatie just for player
-                            if (__instance.team.IsLocalPlayer)
-                            {
-                                __instance.Combat.MessageCenter.PublishMessage(new FloatieMessage(__instance.GUID, __instance.GUID, "MASTER TACTICIAN: + 5 RESOLVE", FloatieMessage.MessageNature.Buff));
-                            }
+                            __instance.Combat.MessageCenter.PublishMessage(new FloatieMessage(__instance.GUID, __instance.GUID, "MASTER TACTICIAN: + 5 RESOLVE", FloatieMessage.MessageNature.Buff));
                         }
                     }
                 }
